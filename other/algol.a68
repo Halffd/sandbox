@@ -1,0 +1,6 @@
+BEGIN
+  INT x;
+  x := 10;
+  print("The value of x is: ");
+  print(x);
+END

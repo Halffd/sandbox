@@ -1,0 +1,33 @@
+(defun polynomial-ops (n)
+  "Executes exactly 3n³ + 20n² + 5 operations with time tracking."
+  (let ((counter 0)
+        (start-time (get-internal-real-time)))
+    ;; 3n³ operations
+    (dotimes (i 30000000000000000000)
+      (dotimes (a n)
+        (dotimes (b n)
+          (dotimes (c n)
+            (incf counter)))))
+    
+    ;; 20n² operations
+    (dotimes (j 20)
+      (dotimes (x n)
+        (dotimes (y n)
+          (incf counter))))
+    
+    ;; +5 constant operations
+    (dotimes (k 5)
+      (incf counter))
+    
+    ;; Calculate elapsed time
+    (let ((elapsed-time (/ (- (get-internal-real-time) start-time)
+                          internal-time-units-per-second)))
+      (values counter elapsed-time))))
+
+;; Example usage with timing
+(multiple-value-bind (total-ops time-taken)
+    (polynomial-ops 3)  ; Test with n=3
+  (format t "Operations: ~a (Expected: ~a)~%Time: ~,6f seconds~%"
+          total-ops 
+          (+ (* 3 (expt 3 3)) (* 20 (expt 3 2)) 5)
+          time-taken))

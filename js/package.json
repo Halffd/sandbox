@@ -1,0 +1,25 @@
+{
+  "type": "module",
+  "dependencies": {
+    "chalk": "^5.4.1",
+    "cheerio": "^1.0.0",
+    "clipboardy": "^4.0.0",
+    "dotenv": "^16.4.7",
+    "jsdom": "^26.0.0",
+    "mailparser": "^3.7.2",
+    "open": "^10.1.0",
+    "temp-mail": "^2.0.0",
+    "tempmail.js": "^0.3.1",
+    "winston": "^3.17.0"
+  },
+  "name": "js",
+  "version": "1.0.0",
+  "main": "diamond.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}

@@ -1,0 +1,6 @@
+(defun qsort (xs)
+  (if (null xs) '()
+    (append (qsort (remove-if-not (lambda (y) (<= y (car xs))) (cdr xs)))
+            (list (car xs))
+            (qsort (remove-if-not (lambda (y) (> y (car xs))) (cdr xs))))))
+(qsort '(4 5 2 6 3 2 3))

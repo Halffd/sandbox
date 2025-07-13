@@ -1,0 +1,15 @@
+(define (find-min-max lst)
+  (if (null? lst)
+      (error "Empty list")
+      (let loop ((rest (cdr lst))
+                (current-min (car lst))
+                (current-max (car lst)))
+        (if (null? rest)
+            (cons current-min current-max) ; or (list current-min current-max)
+            (let ((element (car rest)))
+              (loop (cdr rest)
+                    (if (< element current-min) element current-min)
+                    (if (> element current-max) element current-max)))))))
+
+(find-min-max '(5 3 8 1 9)) ; returns (1 . 9) or (1 9) if using list
+(find-min-max '(5))          ; returns (5 . 5)

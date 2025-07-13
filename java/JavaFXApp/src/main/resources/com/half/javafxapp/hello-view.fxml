@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox alignment="CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.half.javafxapp.HelloController">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+    <Button id="button" fx:id="button" onAction="#onHelloButtonClick" prefHeight="43.0" prefWidth="64.0" text="Click" textFill="#3a5e20">
+      <effect>
+         <ColorAdjust />
+      </effect></Button>
+   <Label id="lbl" fx:id="lbl" onMouseMoved="#lblMouseMove" text="Java" textFill="#ff5151">
+      <font>
+         <Font name="Crimson Bold" size="45.0" />
+      </font>
+   </Label>
+
+    <Label fx:id="welcomeText" text="Welcome">
+      <font>
+         <Font name="AsanaMathJax_NonUnicode-Regular" size="24.0" />
+      </font></Label>
+</VBox>

@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enhanced Video Player</title>
+  <link href="https://vjs.zencdn.net/8.22.0/video-js.css" rel="stylesheet" />
+  <link href="https://unpkg.com/@videojs/themes@1/dist/city/index.css" rel="stylesheet" />
+  <script src="https://vjs.zencdn.net/8.22.0/video.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: '#5D5CDE',
+          }
+        }
+      }
+    }
+
+    // Dark mode detection
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      document.documentElement.classList.add('dark');
+    }
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+      if (event.matches) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    });
+  </script>
+  <style>
+    /* Custom styles for video player */
+    .custom-video-container {
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      border-radius: 0.5rem;
+      overflow: hidden;
+    }
+    
+    .dark .custom-video-container {
+      box-shadow: 0 4px 6px -1px rgba(255, 255, 255, 0.07), 0 2px 4px -1px rgba(255, 255, 255, 0.05);
+    }
+    
+    /* Custom select styling */
+    select {
+      appearance: none;
+      background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%235D5CDE%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.7rem top 50%;
+      background-size: 0.65rem auto;
+    }
+    
+    .dark select {
+      background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23a5a4ff%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+    }
+  </style>
+</head>
+
+<body class="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 min-h-screen p-4 md:p-8">
+  <div class="max-w-4xl mx-auto">
+    <h1 class="text-2xl md:text-3xl font-bold mb-6 text-center">Enhanced Video Player</h1>
+    
+    <div class="mb-6 space-y-4">
+      <!-- Video Source Selection -->
+      <div>
+        <label class="block mb-2 font-medium">Video Source:</label>
+        <div class="flex flex-wrap gap-3">
+          <button id="sample-videos-btn" class="px-4 py-2 bg-primary text-white rounded-md hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 dark:bg-primary dark:bg-opacity-80">Sample Videos</button>
+          <button id="upload-video-btn" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600">Upload Video</button>
+        </div>
+      </div>
+      
+      <!-- Sample Videos Section -->
+      <div id="sample-videos-section" class="border border-gray-200 dark:border-gray-700 p-4 rounded-md">
+        <label for="video-select" class="block mb-2 font-medium">Select Sample Video:</label>
+        <select id="video-select" class="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-base text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-opacity-70">
+          <option value="sintel">Sintel Trailer</option>
+          <option value="bunny">Big Buck Bunny</option>
+          <option value="elephants">Elephants Dream</option>
+        </select>
+      </div>
+      
+      <!-- Upload Video Section (initially hidden) -->
+      <div id="upload-video-section" class="border border-gray-200 dark:border-gray-700 p-4 rounded-md hidden">
+        <label for="video-file" class="block mb-2 font-medium">Upload Video File:</label>
+        <input type="file" id="video-file" accept="video/*" class="w-full p-2 text-base border border-gray-300 dark:border-gray-700 rounded-md dark:bg-gray-800 dark:text-gray-200" />
+        <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">Supported formats: MP4, WebM, OGG, etc.</p>
+      </div>
+      
+      <!-- Subtitle Source Selection -->
+      <div class="mt-4">
+        <label class="block mb-2 font-medium">Subtitle Source:</label>
+        <div class="flex flex-wrap gap-3">
+          <button id="sample-subs-btn" class="px-4 py-2 bg-primary text-white rounded-md hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 dark:bg-primary dark:bg-opacity-80">Sample Subtitles</button>
+          <button id="upload-sub-btn" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600">Upload Subtitle</button>
+          <button id="no-subs-btn" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600">No Subtitles</button>
+        </div>
+      </div>
+      
+      <!-- Sample Subtitles Section -->
+      <div id="sample-subs-section" class="border border-gray-200 dark:border-gray-700 p-4 rounded-md">
+        <label for="subtitle-select" class="block mb-2 font-medium">Select Sample Subtitle:</label>
+        <select id="subtitle-select" class="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-base text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-opacity-70">
+          <option value="en">English</option>
+          <option value="es">Spanish</option>
+          <option value="fr">French</option>
+        </select>
+      </div>
+      
+      <!-- Upload Subtitle Section (initially hidden) -->
+      <div id="upload-sub-section" class="border border-gray-200 dark:border-gray-700 p-4 rounded-md hidden">
+        <label for="subtitle-file" class="block mb-2 font-medium">Upload Subtitle File:</label>
+        <input type="file" id="subtitle-file" accept=".vtt,.srt,.ass,.ssa,.sub" class="w-full p-2 text-base border border-gray-300 dark:border-gray-700 rounded-md dark:bg-gray-800 dark:text-gray-200" />
+        <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">Supported formats: VTT, SRT, etc.</p>
+      </div>
+    </div>
+    
+    <div class="custom-video-container">
+      <video
+        id="my-video"
+        class="video-js vjs-theme-city"
+        controls
+        preload="auto"
+        width="100%"
+        poster="https://vjs.zencdn.net/v/oceans.png"
+        data-setup="{}"
+      >
+        <p class="vjs-no-js">
+          To view this video please enable JavaScript, and consider upgrading to a
+          web browser that
+          <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+        </p>
+      </video>
+    </div>
+    
+    <div class="mt-6 p-4 bg-gray-100 dark:bg-gray-800 rounded-md text-sm">
+      <h3 class="font-bold mb-2">Video Information</h3>
+      <div id="video-info" class="space-y-1">
+        <p><span class="font-medium">Current Video:</span> <span id="current-video-info">Sintel Trailer</span></p>
+        <p><span class="font-medium">Subtitles:</span> <span id="current-subtitle-info">None</span></p>
+        <p id="player-status" class="text-xs mt-2 text-gray-500 dark:text-gray-400">Loading player...</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Video sources
+    const videoSources = {
+      sintel: {
+        name: 'Sintel Trailer',
+        mp4: 'https://vjs.zencdn.net/v/oceans.mp4',
+        webm: 'https://vjs.zencdn.net/v/oceans.webm',
+        poster: 'https://vjs.zencdn.net/v/oceans.png',
+        subtitles: {
+          en: 'https://cdn.jsdelivr.net/gh/BtbN/FFmpeg-Builds@master/subtitle-samples/captions-en.vtt',
+          es: 'https://cdn.jsdelivr.net/gh/BtbN/FFmpeg-Builds@master/subtitle-samples/captions-es.vtt',
+          fr: 'https://cdn.jsdelivr.net/gh/BtbN/FFmpeg-Builds@master/subtitle-samples/captions-fr.vtt'
+        }
+      },
+      bunny: {
+        name: 'Big Buck Bunny',
+        mp4: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+        webm: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', // Fallback to MP4
+        poster: 'https://peach.blender.org/wp-content/uploads/bbb-splash.png',
+        subtitles: {
+          en: 'https://cdn.jsdelivr.net/gh/BtbN/FFmpeg-Builds@master/subtitle-samples/captions-en.vtt',
+          es: 'https://cdn.jsdelivr.net/gh/BtbN/FFmpeg-Builds@master/subtitle-samples/captions-es.vtt',
+          fr: 'https://cdn.jsdelivr.net/gh/BtbN/FFmpeg-Builds@master/subtitle-samples/captions-fr.vtt'
+        }
+      },
+      elephants: {
+        name: 'Elephants Dream',
+        mp4: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
+        webm: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4', // Fallback to MP4
+        poster: 'https://upload.wikimedia.org/wikipedia/commons/e/e8/Elephants_Dream_s5_both.jpg',
+        subtitles: {
+          en: 'https://cdn.jsdelivr.net/gh/BtbN/FFmpeg-Builds@master/subtitle-samples/captions-en.vtt',
+          es: 'https://cdn.jsdelivr.net/gh/BtbN/FFmpeg-Builds@master/subtitle-samples/captions-es.vtt',
+          fr: 'https://cdn.jsdelivr.net/gh/BtbN/FFmpeg-Builds@master/subtitle-samples/captions-fr.vtt'
+        }
+      }
+    };
+
+    // Initialize player
+    let player;
+    let currentVideo = 'sintel';
+    let currentSubtitle = 'none';
+
+    // Track the source of video and subtitles
+    let videoSource = 'sample'; // 'sample' or 'upload'
+    let subtitleSource = 'sample'; // 'sample', 'upload', or 'none'
+    
+    // Local file URLs
+    let uploadedVideoURL = null;
+    let uploadedSubtitleURL = null;
+    
+    // Wait for the page to be fully loaded
+    window.addEventListener('load', function() {
+      const playerStatus = document.getElementById('player-status');
+      
+      // Check if videojs is available
+      if (typeof videojs === 'undefined') {
+        playerStatus.textContent = 'Error: Video.js library not loaded. Please refresh the page.';
+        playerStatus.classList.add('text-red-500');
+        return;
+      }
+
+      try {
+        // Initialize the player
+        player = videojs('my-video', {
+          fluid: true,
+          responsive: true,
+          html5: {
+            vhs: {
+              overrideNative: true
+            },
+            nativeTextTracks: false
+          }
+        });
+
+        // Load initial video
+        loadVideo(currentVideo, currentSubtitle);
+        playerStatus.textContent = 'Player ready';
+
+        // Add event listeners for select changes
+        document.getElementById('video-select').addEventListener('change', function(e) {
+          currentVideo = e.target.value;
+          loadVideo(currentVideo, currentSubtitle);
+        });
+
+        document.getElementById('subtitle-select').addEventListener('change', function(e) {
+          currentSubtitle = e.target.value;
+          loadSubtitles(currentVideo, currentSubtitle);
+        });
+        
+        // Add player ready event
+        player.on('ready', function() {
+          playerStatus.textContent = 'Player ready';
+        });
+        
+        // Add error event
+        player.on('error', function() {
+          playerStatus.textContent = 'Player error: ' + player.error().message;
+          playerStatus.classList.add('text-red-500');
+        });
+        
+        // Setup the toggle buttons for video source
+        document.getElementById('sample-videos-btn').addEventListener('click', function() {
+          setActiveButton(this, document.getElementById('upload-video-btn'));
+          showElement('sample-videos-section');
+          hideElement('upload-video-section');
+          videoSource = 'sample';
+          loadVideo(currentVideo, currentSubtitle);
+        });
+        
+        document.getElementById('upload-video-btn').addEventListener('click', function() {
+          setActiveButton(this, document.getElementById('sample-videos-btn'));
+          hideElement('sample-videos-section');
+          showElement('upload-video-section');
+          videoSource = 'upload';
+          if (uploadedVideoURL) {
+            loadUploadedVideo(uploadedVideoURL);
+          }
+        });
+        
+        // Setup the toggle buttons for subtitle source
+        document.getElementById('sample-subs-btn').addEventListener('click', function() {
+          setActiveButton(this, [document.getElementById('upload-sub-btn'), document.getElementById('no-subs-btn')]);
+          showElement('sample-subs-section');
+          hideElement('upload-sub-section');
+          subtitleSource = 'sample';
+          loadSubtitles(currentVideo, currentSubtitle);
+        });
+        
+        document.getElementById('upload-sub-btn').addEventListener('click', function() {
+          setActiveButton(this, [document.getElementById('sample-subs-btn'), document.getElementById('no-subs-btn')]);
+          hideElement('sample-subs-section');
+          showElement('upload-sub-section');
+          subtitleSource = 'upload';
+          if (uploadedSubtitleURL) {
+            loadUploadedSubtitle(uploadedSubtitleURL);
+          }
+        });
+        
+        document.getElementById('no-subs-btn').addEventListener('click', function() {
+          setActiveButton(this, [document.getElementById('sample-subs-btn'), document.getElementById('upload-sub-btn')]);
+          hideElement('sample-subs-section');
+          hideElement('upload-sub-section');
+          subtitleSource = 'none';
+          removeAllSubtitles();
+        });
+        
+        // Setup file upload handlers
+        document.getElementById('video-file').addEventListener('change', function(e) {
+          const file = e.target.files[0];
+          if (!file) return;
+          
+          const playerStatus = document.getElementById('player-status');
+          playerStatus.textContent = 'Loading video file...';
+          
+          // Revoke previous object URL to avoid memory leaks
+          if (uploadedVideoURL) {
+            URL.revokeObjectURL(uploadedVideoURL);
+          }
+          
+          // Create a new object URL for the video file
+          uploadedVideoURL = URL.createObjectURL(file);
+          
+          // Load the video
+          loadUploadedVideo(uploadedVideoURL, file.name);
+        });
+        
+        document.getElementById('subtitle-file').addEventListener('change', function(e) {
+          const file = e.target.files[0];
+          if (!file) return;
+          
+          const playerStatus = document.getElementById('player-status');
+          playerStatus.textContent = 'Loading subtitle file...';
+          
+          // Revoke previous object URL to avoid memory leaks
+          if (uploadedSubtitleURL) {
+            URL.revokeObjectURL(uploadedSubtitleURL);
+          }
+          
+          // Create a new object URL for the subtitle file
+          uploadedSubtitleURL = URL.createObjectURL(file);
+          
+          // Load the subtitle
+          loadUploadedSubtitle(uploadedSubtitleURL, file.name);
+        });
+      } catch (err) {
+        playerStatus.textContent = 'Error initializing player: ' + err.message;
+        playerStatus.classList.add('text-red-500');
+        console.error('Error initializing player:', err);
+      }
+    });
+
+    // Load video function
+    function loadVideo(videoId, subtitleLang) {
+      if (!player) return;
+      
+      const videoData = videoSources[videoId];
+      const playerStatus = document.getElementById('player-status');
+      
+      try {
+        // Update player sources
+        player.src([
+          { type: 'video/mp4', src: videoData.mp4 },
+          { type: 'video/webm', src: videoData.webm }
+        ]);
+        
+        // Update poster
+        player.poster(videoData.poster);
+        
+        // Load subtitles
+        loadSubtitles(videoId, subtitleLang);
+        
+        // Update info display
+        document.getElementById('current-video-info').textContent = videoData.name;
+        
+        // Reset and play
+        player.load();
+        playerStatus.textContent = 'Video loaded: ' + videoData.name;
+      } catch (err) {
+        playerStatus.textContent = 'Error loading video: ' + err.message;
+        playerStatus.classList.add('text-red-500');
+        console.error('Error loading video:', err);
+      }
+    }
+
+    // Helper functions for UI management
+    function setActiveButton(activeBtn, inactiveBtns) {
+      // Set the active button style
+      activeBtn.classList.remove('bg-gray-200', 'text-gray-800', 'dark:bg-gray-700', 'dark:text-gray-200');
+      activeBtn.classList.add('bg-primary', 'text-white');
+      
+      // Handle single or multiple inactive buttons
+      if (!Array.isArray(inactiveBtns)) {
+        inactiveBtns = [inactiveBtns];
+      }
+      
+      // Set inactive button styles
+      inactiveBtns.forEach(btn => {
+        btn.classList.remove('bg-primary', 'text-white');
+        btn.classList.add('bg-gray-200', 'text-gray-800', 'dark:bg-gray-700', 'dark:text-gray-200');
+      });
+    }
+    
+    function showElement(id) {
+      const element = document.getElementById(id);
+      if (element) {
+        element.classList.remove('hidden');
+      }
+    }
+    
+    function hideElement(id) {
+      const element = document.getElementById(id);
+      if (element) {
+        element.classList.add('hidden');
+      }
+    }
+    
+    // Load uploaded video
+    function loadUploadedVideo(videoUrl, fileName = 'Uploaded Video') {
+      if (!player) return;
+      
+      try {
+        // Update player source with the uploaded video
+        player.src({
+          type: 'video/mp4', // We can try to detect the type, but most browsers handle MP4
+          src: videoUrl
+        });
+        
+        // Remove the poster when using custom video
+        player.poster('');
+        
+        // Update info display
+        document.getElementById('current-video-info').textContent = fileName;
+        
+        // Reset and play
+        player.load();
+        
+        const playerStatus = document.getElementById('player-status');
+        playerStatus.textContent = 'Uploaded video loaded: ' + fileName;
+        playerStatus.classList.remove('text-red-500');
+      } catch (err) {
+        const playerStatus = document.getElementById('player-status');
+        playerStatus.textContent = 'Error loading uploaded video: ' + err.message;
+        playerStatus.classList.add('text-red-500');
+        console.error('Error loading uploaded video:', err);
+      }
+    }
+    
+    // Load uploaded subtitle
+    function loadUploadedSubtitle(subtitleUrl, fileName = 'Uploaded Subtitle') {
+      if (!player) return;
+      
+      try {
+        // Remove existing text tracks
+        removeAllSubtitles();
+        
+        // Add the new subtitle track
+        player.addRemoteTextTrack({
+          kind: 'subtitles',
+          srclang: 'en', // Default language code
+          label: fileName,
+          src: subtitleUrl,
+          default: true
+        }, false);
+        
+        // Update subtitle info display
+        document.getElementById('current-subtitle-info').textContent = fileName;
+        
+        const playerStatus = document.getElementById('player-status');
+        playerStatus.textContent = 'Subtitle loaded: ' + fileName;
+        playerStatus.classList.remove('text-red-500');
+      } catch (err) {
+        const playerStatus = document.getElementById('player-status');
+        playerStatus.textContent = 'Error loading subtitle: ' + err.message;
+        playerStatus.classList.add('text-red-500');
+        console.error('Error loading subtitle:', err);
+      }
+    }
+    
+    // Remove all subtitles
+    function removeAllSubtitles() {
+      if (!player) return;
+      
+      try {
+        // Remove all text tracks
+        const tracks = player.textTracks();
+        for (let i = tracks.length - 1; i >= 0; i--) {
+          player.removeRemoteTextTrack(tracks[i]);
+        }
+        
+        // Update subtitle info display
+        document.getElementById('current-subtitle-info').textContent = 'None';
+        
+        const playerStatus = document.getElementById('player-status');
+        playerStatus.textContent = 'Subtitles removed';
+        playerStatus.classList.remove('text-red-500');
+      } catch (err) {
+        console.error('Error removing subtitles:', err);
+      }
+    }
+    
+    // Load subtitles function (for sample subtitles)
+    function loadSubtitles(videoId, subtitleLang) {
+      if (!player || subtitleSource !== 'sample') return;
+      
+      try {
+        // Remove existing text tracks
+        const tracks = player.textTracks();
+        for (let i = tracks.length - 1; i >= 0; i--) {
+          player.removeRemoteTextTrack(tracks[i]);
+        }
+        
+        // Add new subtitle if selected
+        if (subtitleLang !== 'none') {
+          const subtitleUrl = videoSources[videoId].subtitles[subtitleLang];
+          player.addRemoteTextTrack({
+            kind: 'subtitles',
+            srclang: subtitleLang,
+            label: subtitleLang === 'en' ? 'English' : 
+                   subtitleLang === 'es' ? 'Spanish' : 
+                   subtitleLang === 'fr' ? 'French' : subtitleLang,
+            src: subtitleUrl,
+            default: true
+          }, false);
+        }
+        
+        // Update subtitle info display
+        document.getElementById('current-subtitle-info').textContent = 
+          subtitleLang === 'none' ? 'None' : 
+          subtitleLang === 'en' ? 'English' : 
+          subtitleLang === 'es' ? 'Spanish' : 
+          subtitleLang === 'fr' ? 'French' : subtitleLang;
+      } catch (err) {
+        const playerStatus = document.getElementById('player-status');
+        playerStatus.textContent = 'Error loading subtitles: ' + err.message;
+        playerStatus.classList.add('text-red-500');
+        console.error('Error loading subtitles:', err);
+      }
+    }
+  </script>
+</body>
+</html>

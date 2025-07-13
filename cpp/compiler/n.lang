@@ -1,0 +1,11 @@
+print "Enter two numbers:"
+read
+read
+sub
+jez equal
+print "Numbers are different!"
+halt
+
+equal:
+print "Numbers are equal!"
+halt

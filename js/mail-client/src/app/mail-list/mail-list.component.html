@@ -1,0 +1,7 @@
+<h2>Email List</h2>
+<ul>
+  <li *ngFor="let email of emails" (click)="viewEmail(email.id)">
+    {{ email.subject }}
+  </li>
+</ul>
+<a routerLink="/compose">Compose Mail</a>

@@ -1,0 +1,19 @@
+
+print "Enter your string (a's followed by b's):"
+
+print "Enter number of a's:"
+read        
+
+print "Enter number of b's:"
+read        
+
+
+sub         
+jez success 
+
+print "REJECTED: Not equal!"
+halt
+
+success:
+print "ACCEPTED: Equal numbers!"
+halt

@@ -1,0 +1,11 @@
+<h2>Compose Mail</h2>
+<label>
+  Subject:
+  <input [(ngModel)]="subject" />
+</label>
+<label>
+  Body:
+  <textarea [(ngModel)]="body"></textarea>
+</label>
+<button (click)="sendMail()">Send</button>
+<a routerLink="/">Cancel</a>

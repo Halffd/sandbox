@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Language Translator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#5D5CDE',
+                    }
+                }
+            }
+        }
+        
+        // Check for dark mode preference
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+        }
+        
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+            if (event.matches) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        });
+    </script>
+</head>
+<body class="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 min-h-screen p-3 transition-colors duration-200">
+    <div class="max-w-3xl mx-auto">
+        <header class="mb-4 text-center">
+            <h1 class="text-2xl md:text-3xl font-bold text-primary mb-1">Sentence Translator</h1>
+            <p class="text-sm text-gray-600 dark:text-gray-400">See word-by-word and full sentence translations</p>
+        </header>
+        
+        <main>
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 mb-4">
+                <div class="flex flex-col md:flex-row gap-3 mb-3">
+                    <div class="w-full md:w-1/2">
+                        <label for="fromLang" class="block mb-1 text-sm font-medium">From:</label>
+                        <select id="fromLang" class="w-full p-2 border border-gray-300 dark:border-gray-700 rounded bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 focus:border-primary focus:ring-2 focus:ring-primary focus:ring-opacity-50 text-base">
+                            <option value="af">Afrikaans</option>
+                            <option value="ar">Arabic</option>
+                            <option value="bg">Bulgarian</option>
+                            <option value="ca">Catalan</option>
+                            <option value="zh">Chinese</option>
+                            <option value="hr">Croatian</option>
+                            <option value="cs">Czech</option>
+                            <option value="da">Danish</option>
+                            <option value="nl">Dutch</option>
+                            <option value="en">English</option>
+                            <option value="et">Estonian</option>
+                            <option value="tl">Filipino</option>
+                            <option value="fi">Finnish</option>
+                            <option value="fr">French</option>
+                            <option value="de" selected>German</option>
+                            <option value="el">Greek</option>
+                            <option value="iw">Hebrew</option>
+                            <option value="hi">Hindi</option>
+                            <option value="hu">Hungarian</option>
+                            <option value="id">Indonesian</option>
+                            <option value="it">Italian</option>
+                            <option value="ja">Japanese</option>
+                            <option value="ko">Korean</option>
+                            <option value="lv">Latvian</option>
+                            <option value="lt">Lithuanian</option>
+                            <option value="no">Norwegian</option>
+                            <option value="pl">Polish</option>
+                            <option value="pt">Portuguese</option>
+                            <option value="ro">Romanian</option>
+                            <option value="ru">Russian</option>
+                            <option value="sr">Serbian</option>
+                            <option value="sk">Slovak</option>
+                            <option value="sl">Slovenian</option>
+                            <option value="es">Spanish</option>
+                            <option value="sv">Swedish</option>
+                            <option value="th">Thai</option>
+                            <option value="tr">Turkish</option>
+                            <option value="uk">Ukrainian</option>
+                            <option value="vi">Vietnamese</option>
+                        </select>
+                    </div>
+                    <div class="w-full md:w-1/2">
+                        <label for="toLang" class="block mb-1 text-sm font-medium">To:</label>
+                        <select id="toLang" class="w-full p-2 border border-gray-300 dark:border-gray-700 rounded bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 focus:border-primary focus:ring-2 focus:ring-primary focus:ring-opacity-50 text-base">
+                            <option value="af">Afrikaans</option>
+                            <option value="ar">Arabic</option>
+                            <option value="bg">Bulgarian</option>
+                            <option value="ca">Catalan</option>
+                            <option value="zh">Chinese</option>
+                            <option value="hr">Croatian</option>
+                            <option value="cs">Czech</option>
+                            <option value="da">Danish</option>
+                            <option value="nl">Dutch</option>
+                            <option value="en" selected>English</option>
+                            <option value="et">Estonian</option>
+                            <option value="tl">Filipino</option>
+                            <option value="fi">Finnish</option>
+                            <option value="fr">French</option>
+                            <option value="de">German</option>
+                            <option value="el">Greek</option>
+                            <option value="iw">Hebrew</option>
+                            <option value="hi">Hindi</option>
+                            <option value="hu">Hungarian</option>
+                            <option value="id">Indonesian</option>
+                            <option value="it">Italian</option>
+                            <option value="ja">Japanese</option>
+                            <option value="ko">Korean</option>
+                            <option value="lv">Latvian</option>
+                            <option value="lt">Lithuanian</option>
+                            <option value="no">Norwegian</option>
+                            <option value="pl">Polish</option>
+                            <option value="pt">Portuguese</option>
+                            <option value="ro">Romanian</option>
+                            <option value="ru">Russian</option>
+                            <option value="sr">Serbian</option>
+                            <option value="sk">Slovak</option>
+                            <option value="sl">Slovenian</option>
+                            <option value="es">Spanish</option>
+                            <option value="sv">Swedish</option>
+                            <option value="th">Thai</option>
+                            <option value="tr">Turkish</option>
+                            <option value="uk">Ukrainian</option>
+                            <option value="vi">Vietnamese</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <label for="sourceInput" class="block mb-1 text-sm font-medium">Enter text to translate:</label>
+                <textarea id="sourceInput" rows="2" class="w-full p-2 border border-gray-300 dark:border-gray-700 rounded bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 focus:border-primary focus:ring-2 focus:ring-primary focus:ring-opacity-50 text-base" placeholder="Ich möchte Deutsch lernen"></textarea>
+                
+                <div class="mt-3 flex flex-wrap gap-2">
+                    <button id="translateBtn" class="px-3 py-1.5 bg-primary hover:bg-opacity-90 text-white font-medium rounded transition-colors duration-200 flex-grow">Translate</button>
+                    <button id="clearBtn" class="px-3 py-1.5 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 font-medium rounded transition-colors duration-200">Clear</button>
+                </div>
+            </div>
+            
+            <div id="loadingIndicator" class="hidden">
+                <div class="flex justify-center items-center mb-2">
+                    <div class="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-primary"></div>
+                </div>
+                <p class="text-center text-sm text-gray-600 dark:text-gray-400">Translating...</p>
+            </div>
+            
+            <div id="translationResult" class="hidden">
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
+                    <h2 class="text-base font-semibold mb-3 text-primary">Translation Result</h2>
+                    
+                    <div class="mb-4">
+                        <h3 class="text-xs uppercase text-gray-500 dark:text-gray-400 mb-1">Word-by-Word Translation</h3>
+                        <div id="wordByWordContainer" class="p-2 bg-gray-100 dark:bg-gray-700 rounded"></div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-xs uppercase text-gray-500 dark:text-gray-400 mb-1">Full Sentence Translation</h3>
+                        <p id="fullTranslation" class="p-2 bg-gray-100 dark:bg-gray-700 rounded"></p>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="errorMessage" class="hidden mt-3 p-3 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-200 rounded"></div>
+        </main>
+        
+        <footer class="mt-4 text-center text-xs text-gray-500 dark:text-gray-400">
+            <p>Powered by Google Translate</p>
+        </footer>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sourceInput = document.getElementById('sourceInput');
+            const fromLang = document.getElementById('fromLang');
+            const toLang = document.getElementById('toLang');
+            const translateBtn = document.getElementById('translateBtn');
+            const clearBtn = document.getElementById('clearBtn');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            const translationResult = document.getElementById('translationResult');
+            const wordByWordContainer = document.getElementById('wordByWordContainer');
+            const fullTranslation = document.getElementById('fullTranslation');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            // Handle translate button click
+            translateBtn.addEventListener('click', async () => {
+                const sourceText = sourceInput.value.trim();
+                const fromLanguage = fromLang.value;
+                const toLanguage = toLang.value;
+                
+                if (!sourceText) {
+                    showError("Please enter text to translate");
+                    return;
+                }
+                
+                errorMessage.classList.add('hidden');
+                showLoading();
+                translationResult.classList.add('hidden');
+                
+                try {
+                    // Get full sentence translation
+                    const fullSentenceTranslation = await translateText(sourceText, fromLanguage, toLanguage);
+                    
+                    // Split source sentence into words and translate each
+                    const sourceWords = sourceText.split(/\s+/).filter(word => word.length > 0);
+                    const wordTranslations = await Promise.all(
+                        sourceWords.map(async (word) => {
+                            const translation = await translateText(word, fromLanguage, toLanguage);
+                            return {
+                                source: word,
+                                translation: translation
+                            };
+                        })
+                    );
+                    
+                    // Display translations
+                    displayWordByWordTranslation(wordTranslations);
+                    fullTranslation.textContent = fullSentenceTranslation;
+                    
+                    hideLoading();
+                    translationResult.classList.remove('hidden');
+                } catch (err) {
+                    showError("Translation error: " + err.message);
+                    hideLoading();
+                }
+            });
+            
+            // Handle clear button click
+            clearBtn.addEventListener('click', () => {
+                sourceInput.value = '';
+                translationResult.classList.add('hidden');
+                errorMessage.classList.add('hidden');
+            });
+            
+            // Translate text using Google Translate API
+            async function translateText(text, fromLang, toLang) {
+                const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${fromLang}&tl=${toLang}&dt=t&q=${encodeURIComponent(text)}`;
+                
+                try {
+                    const response = await fetch(url);
+                    
+                    if (!response.ok) {
+                        throw new Error(`Translation request failed: ${response.status}`);
+                    }
+                    
+                    const data = await response.json();
+                    
+                    // Google Translate API returns a complex nested array
+                    // First element contains an array of translations
+                    if (data && data[0] && data[0].length > 0) {
+                        // Combine all translation segments
+                        return data[0]
+                            .filter(item => item[0]) // Filter out null/undefined segments
+                            .map(item => item[0])    // Get the translation text
+                            .join('');               // Join segments
+                    } else {
+                        throw new Error('Unexpected translation response format');
+                    }
+                } catch (error) {
+                    console.error('Translation error:', error);
+                    throw error;
+                }
+            }
+            
+            // Display word-by-word translation in a visually appealing way
+            function displayWordByWordTranslation(words) {
+                wordByWordContainer.innerHTML = '';
+                
+                const container = document.createElement('div');
+                container.className = 'flex flex-wrap gap-x-2 gap-y-3';
+                
+                words.forEach(pair => {
+                    // Skip if the translation is the same as the source word (case insensitive)
+                    if (pair.source.toLowerCase() === pair.translation.toLowerCase()) {
+                        const wordContainer = document.createElement('div');
+                        wordContainer.className = 'flex flex-col items-center min-w-fit mx-0.5';
+                        
+                        const sourceSpan = document.createElement('div');
+                        sourceSpan.className = 'text-sm md:text-base font-medium';
+                        sourceSpan.textContent = pair.source;
+                        
+                        wordContainer.appendChild(sourceSpan);
+                        container.appendChild(wordContainer);
+                    } else {
+                        const wordContainer = document.createElement('div');
+                        wordContainer.className = 'flex flex-col items-center min-w-fit mx-0.5';
+                        
+                        const translationSpan = document.createElement('div');
+                        translationSpan.className = 'text-xs md:text-sm text-gray-600 dark:text-gray-400 mb-0.5';
+                        translationSpan.textContent = pair.translation;
+                        
+                        const sourceSpan = document.createElement('div');
+                        sourceSpan.className = 'text-sm md:text-base font-medium';
+                        sourceSpan.textContent = pair.source;
+                        
+                        wordContainer.appendChild(translationSpan);
+                        wordContainer.appendChild(sourceSpan);
+                        container.appendChild(wordContainer);
+                    }
+                });
+                
+                wordByWordContainer.appendChild(container);
+            }
+            
+            function showLoading() {
+                loadingIndicator.classList.remove('hidden');
+            }
+            
+            function hideLoading() {
+                loadingIndicator.classList.add('hidden');
+            }
+            
+            function showError(message) {
+                errorMessage.textContent = message;
+                errorMessage.classList.remove('hidden');
+            }
+        });
+    </script>
+</body>
+</html>

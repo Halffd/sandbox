@@ -1,0 +1,14 @@
+build
+bin
+src/file
+.history
+exc/bin
+exc/build
+file
+src/out
+log
+.cache
+exc/*.log
+exc/*.out
+*.out
+*.log

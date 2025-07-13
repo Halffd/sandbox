@@ -53,3 +53,243 @@ dkms.conf
 
 # debug information files
 *.dwo
+
+# ActionScript
+actionscript/**/*.swf
+actionscript/**/*.swc
+actionscript/**/*.fla~
+actionscript/**/bin/
+actionscript/**/bin-debug/
+actionscript/**/bin-release/
+
+# Ada
+ada/**/*.ali
+ada/**/*.bak
+ada/**/*.o
+ada/**/b~*
+ada/**/gnat.adc
+
+# C/C++
+c/**/*.o
+c/**/*.so
+c/**/*.dll
+c/**/*.dylib
+c/**/build/
+c/**/cmake-build-*/
+cpp/**/*.o
+cpp/**/*.so
+cpp/**/*.dll
+cpp/**/*.dylib
+cpp/**/build/
+cpp/**/cmake-build-*/
+
+# C#
+csharp/**/*.exe
+csharp/**/*.dll
+csharp/**/*.pdb
+csharp/**/bin/
+csharp/**/obj/
+csharp/**/*.user
+csharp/**/*.suo
+csharp/**/*.sln.docstates
+
+# Clojure
+clojure/**/.lein-*
+clojure/**/target/
+clojure/**/.nrepl-port
+clojure/**/.cpcache/
+clojure/**/classes/
+
+# Elixir
+elixir/**/_build/
+elixir/**/deps/
+elixir/**/*.beam
+elixir/**/*.plt
+elixir/**/erl_crash.dump
+elixir/**/.elixir_ls/
+
+# Elm
+elm/**/elm-stuff/
+elm/**/repl-temp-*/
+
+# Erlang
+erlang/**/*.beam
+erlang/**/ebin/
+erlang/**/.eunit
+erlang/**/deps/
+erlang/**/_build/
+erlang/**/rebar3.crashdump
+
+# F#
+fsharp/**/*.exe
+fsharp/**/*.dll
+fsharp/**/*.pdb
+fsharp/**/bin/
+fsharp/**/obj/
+fsharp/**/*.fsproj.user
+
+# Go
+go/**/go.mod
+go/**/go.sum
+go/**/*.exe
+go/**/vendor/
+
+# Groovy
+groovy/**/*.class
+groovy/**/build/
+groovy/**/.gradle/
+groovy/**/gradle/
+groovy/lib
+
+# Haskell
+haskell/**/*.hi
+haskell/**/*.o
+haskell/**/*.dyn_hi
+haskell/**/*.dyn_o
+haskell/**/.stack-work/
+haskell/**/dist/
+haskell/**/cabal-dev/
+haskell/**/.cabal-sandbox/
+haskell/**/cabal.sandbox.config
+
+# HTML/CSS/JS
+html/**/node_modules/
+html/**/npm-debug.log*
+html/**/.npm
+html/**/coverage/
+html/**/*.log
+js/**/node_modules/
+js/**/npm-debug.log*
+js/**/.npm
+js/**/coverage/
+js/**/*.log
+js/.env
+
+# Java
+java/**/*.class
+java/**/*.jar
+java/**/*.war
+java/**/target/
+java/**/build/
+java/**/.gradle/
+java/**/gradle/
+
+# Kotlin
+kotlin/**/*.class
+kotlin/**/*.jar
+kotlin/**/build/
+kotlin/**/.gradle/
+kotlin/**/gradle/
+
+# Lisp
+lisp/**/*.fasl
+lisp/**/*.fas
+lisp/**/*.lib
+lisp/**/*.x86f
+lisp/**/*.amd64f
+lisp/**/*.lx32fsl
+lisp/**/*.lx64fsl
+lisp/**/*.dx32fsl
+lisp/**/*.dx64fsl
+
+# OCaml
+ocaml/**/*.cmo
+ocaml/**/*.cmi
+ocaml/**/*.cmx
+ocaml/**/*.o
+ocaml/**/*.a
+ocaml/**/*.cmxa
+ocaml/**/*.annot
+ocaml/**/_build/
+ocaml/**/*.native
+ocaml/**/*.byte
+
+# Pascal
+pascal/**/*.exe
+pascal/**/*.o
+pascal/**/*.ppu
+pascal/**/*.compiled
+pascal/**/backup/
+pascal/**/lib/
+
+# PHP
+php/**/vendor/
+php/**/composer.lock
+php/**/*.log
+
+# PureScript
+purescript/**/.pulp-cache/
+purescript/**/bower_components/
+purescript/**/node_modules/
+purescript/**/output/
+
+# Python
+py/manim/media
+py/**/__pycache__/
+py/**/*.pyc
+py/**/*.pyo
+py/**/*.egg-info/
+py/**/venv/
+py/**/.env
+py/**/dist/
+py/**/build/
+py/**/.pytest_cache/
+
+# Ruby
+ruby/**/*.gem
+ruby/**/.bundle/
+ruby/**/vendor/bundle/
+ruby/**/Gemfile.lock
+ruby/**/.rbenv-version
+
+# Rust
+rust/**/target/
+rust/**/Cargo.lock
+rust/**/*.rs.bk
+
+# Scala
+scala/**/*.class
+scala/**/target/
+scala/**/.bloop/
+scala/**/.metals/
+scala/**/.scala-build/
+scala/**/project/target/
+scala/**/project/project/
+
+# Scheme
+scheme/**/*.so
+scheme/**/*.o
+scheme/**/*.boot
+scheme/**/*.wpo
+
+# Zig
+zig/**/zig-cache/
+zig/**/zig-out/
+zig/**/*.o
+zig/**/*.exe
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+**/*.env
+**/*.mp4
+**/*.avi
+**/*.mkv
+**/*.mp3
+**/*.log
+**/*.txt
+**/*.out
+**/node_modules
+**/package-lock.json
+*.tasty
+*.class
+target/
+.metals/
+.bloop/

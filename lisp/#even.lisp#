@@ -1,0 +1,21 @@
+(defun par (x)
+  (format t "Entering PAR with x=~a~%" x)
+  (cond 
+    ((= x 0) (progn (format t "Base case: PAR 0 => true~%") t))
+    ((= x 1) (progn (format t "Base case: PAR 1 => false~%") nil))
+    (t (progn 
+         (format t "PAR ~a recursively calling IMPAR ~a~%" x (- x 1))
+         (impar (- x 1))))))
+
+(defun impar (x)
+  (format t "Entering IMPAR with x=~a~%" x)
+  (cond 
+    ((= x 0) (progn (format t "Base case: IMPAR 0 => false~%") nil))
+    ((= x 1) (progn (format t "Base case: IMPAR 1 => true~%") t))
+    (t (progn 
+         (format t "IMPAR ~a recursively calling PAR ~a~%" x (- x 1))
+         (par (- x 1))))))
+(par 12)
+; (impar -3)
+(impar 5)
+(impar 4)

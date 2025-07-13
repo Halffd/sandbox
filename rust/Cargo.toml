@@ -1,0 +1,13 @@
+[package]
+name = "rust"
+version = "1.85.0"
+edition = "2021"
+
+[dependencies]
+colored = "2.0.0"
+dotenv = "0.15.0"
+hyper = { version = "0.14", features = ["full"] }
+sqlx = { version = "0.7", features = ["runtime-tokio-rustls", "sqlite"] }
+tokio = { version = "1.0", features = ["full"] }
+glob = "0.3.1"
+sha2 = "0.10.8"
